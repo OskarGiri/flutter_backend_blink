@@ -8,11 +8,14 @@ const userSchema = new mongoose.Schema(
 
     // ✅ MVP profile fields
     fullName: { type: String, default: "" },
-    dob: { type: String, default: "" },          // store ISO string for MVP
+    dob: { type: String, default: "" }, // store ISO string for MVP
     gender: { type: String, default: "" },
     lookingFor: { type: String, default: "" },
+
+    // ✅ photos list (URLs)
+    photos: { type: [String], default: [] },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("User", userSchema);
