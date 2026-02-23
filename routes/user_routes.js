@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const { signup, login, findAllUsers } = require("../controller/user_controller");
+const {
+  signup,
+  login,
+  findAllUsers,
+  changePassword,
+} = require("../controller/user_controller");
 const { getMe, updateMe } = require("../controller/profile_controller");
 const { uploadPhoto, deletePhoto } = require("../controller/photo_controller");
 
@@ -23,6 +28,7 @@ const upload = multer({ storage });
 
 router.post("/signup", signup);
 router.post("/login", login);
+router.post("/change-password", auth, changePassword);
 
 // profile
 router.get("/me", auth, getMe);
