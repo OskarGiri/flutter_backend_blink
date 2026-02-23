@@ -25,7 +25,7 @@ const swipe = async (req, res) => {
         toUser: { $in: [targetId, targetId.toString()] },
       },
       { $set: { fromUser: fromId, toUser: targetId, action } },
-      { upsert: true, returnDocument: "after" } // ✅ mongoose 9
+      { upsert: true, returnDocument: "after" }
     );
 
     if (action !== "like") {
@@ -43,21 +43,26 @@ const swipe = async (req, res) => {
       return res.status(200).json({ ok: true, matched: false });
     }
 
+    // ✅ always sort pair
     const usersSorted = [fromId, targetId].sort((a, b) =>
       a.toString().localeCompare(b.toString())
     );
 
+    // ✅ IMPORTANT: match filter must align with the compound unique index users.0 + users.1
+    const matchFilter = { "users.0": usersSorted[0], "users.1": usersSorted[1] };
+    const matchInsert = { users: usersSorted };
+
     let match;
     try {
       match = await Match.findOneAndUpdate(
-        { users: usersSorted },
-        { $setOnInsert: { users: usersSorted } },
-        { upsert: true, returnDocument: "after" } // ✅ mongoose 9
+        matchFilter,
+        { $setOnInsert: matchInsert },
+        { upsert: true, returnDocument: "after" }
       );
     } catch (e) {
-      // race safety if you have a unique index on users
+      // ✅ race safety if both users like at the same moment
       if (e && e.code === 11000) {
-        match = await Match.findOne({ users: usersSorted });
+        match = await Match.findOne(matchFilter);
       } else {
         throw e;
       }

@@ -1,3 +1,4 @@
+// backedNodeBlik/models/match.js
 const mongoose = require("mongoose");
 
 const matchSchema = new mongoose.Schema(
@@ -9,6 +10,7 @@ const matchSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Always keep pair sorted so (A,B) == (B,A)
 matchSchema.pre("validate", function (next) {
   if (Array.isArray(this.users) && this.users.length === 2) {
     this.users.sort((a, b) => a.toString().localeCompare(b.toString()));
@@ -16,6 +18,7 @@ matchSchema.pre("validate", function (next) {
   next();
 });
 
-matchSchema.index({ users: 1 }, { unique: true });
+// ✅ Correct: unique on the PAIR (users[0], users[1])
+matchSchema.index({ "users.0": 1, "users.1": 1 }, { unique: true });
 
 module.exports = mongoose.model("Match", matchSchema);
