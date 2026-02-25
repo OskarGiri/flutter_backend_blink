@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const connectDB = require("./config/DB");
 
 const userroutes = require("./routes/user_routes");
+const authRoutes = require("./routes/auth.routes");
 const discoveryRoutes = require("./routes/discovery_routes");
 const swipeRoutes = require("./routes/swipe_routes");
 const matchRoutes = require("./routes/match_routes");
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/users", userroutes);
+app.use("/auth", authRoutes);
 app.use("/discovery", discoveryRoutes);
 app.use("/swipes", swipeRoutes);
 app.use("/matches", matchRoutes);
