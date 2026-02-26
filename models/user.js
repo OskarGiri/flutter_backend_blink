@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
     dob: { type: String, default: "" }, // store ISO string for MVP
     gender: { type: String, default: "" },
     lookingFor: { type: String, default: "" },
+    bio: { type: String, default: "" }, // About Me section
 
     // ✅ photos list (URLs)
     photos: { type: [String], default: [] },
