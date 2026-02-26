@@ -1,5 +1,6 @@
 // backedNodeBlik/app.js
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -8,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const connectDB = require("./config/DB");
 
 const userroutes = require("./routes/user_routes");
+const authRoutes = require("./routes/auth.routes");
 const discoveryRoutes = require("./routes/discovery_routes");
 const swipeRoutes = require("./routes/swipe_routes");
 const matchRoutes = require("./routes/match_routes");
@@ -16,16 +18,18 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+app.use(cors());
 
 // serve uploaded images publicly
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/users", userroutes);
+app.use("/auth", authRoutes);
 app.use("/discovery", discoveryRoutes);
 app.use("/swipes", swipeRoutes);
 app.use("/matches", matchRoutes);
 
-const port = 3000;
+const port = 3001;
 
 // ✅ Socket.IO setup
 const server = http.createServer(app);
@@ -65,7 +69,7 @@ io.on("connection", (socket) => {
 app.set("io", io);
 
 server.listen(port, "0.0.0.0", () => {
-  console.log("Server running on port 3000");
+  console.log(`✅ Server running on port ${port}`);
 });
 
 module.exports = app;

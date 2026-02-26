@@ -73,6 +73,11 @@ const postMessage = async (req, res) => {
       text,
     });
 
+    // ✅ ADD THIS LINE (updates match.updatedAt so /matches sort works)
+    await Match.findByIdAndUpdate(matchObjectId, {
+      $set: { updatedAt: new Date() },
+    });
+
     // ✅ REAL-TIME emit to both users
     const io = req.app.get("io");
     if (io) {
@@ -104,5 +109,4 @@ const postMessage = async (req, res) => {
       .json({ message: e.message || "Failed to send message" });
   }
 };
-
 module.exports = { getMessages, postMessage };

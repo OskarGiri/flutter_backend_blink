@@ -14,6 +14,14 @@ const userSchema = new mongoose.Schema(
 
     // ✅ photos list (URLs)
     photos: { type: [String], default: [] },
+
+    // Forgot password via OTP
+    resetOtpHash: { type: String, default: null },
+    resetOtpExpiresAt: { type: Date, default: null },
+    resetOtpAttempts: { type: Number, default: 0 },
+    resetOtpResendAfter: { type: Date, default: null },
+    resetTokenHash: { type: String, default: null },
+    resetTokenExpiresAt: { type: Date, default: null },
   },
   { timestamps: true }
 );
